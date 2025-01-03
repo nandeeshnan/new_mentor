@@ -1,0 +1,33 @@
+version: '3.8'
+
+networks:
+  app_network:
+    driver: bridge
+  
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - app_network
+  python_app:
+    build: 
+      context: .
+    networks:
+      - app_network
+    ports:
+      - "5000:5000"
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+
+
